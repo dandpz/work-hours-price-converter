@@ -56,15 +56,23 @@ function updateAllTabs() {
     
     uniqueTabs.forEach((tab) => {
       if (tab.id) {
-        chrome.tabs.sendMessage(tab.id, {
+        const message = {
           type: 'UPDATE_SETTINGS',
-          salary: settings.monthlySalary,
+          monthlySalary: settings.monthlySalary,
           hourlyWage: settings.hourlyWage,
           dailyHours: settings.dailyHours,
           workingDaysPerWeek: settings.workingDaysPerWeek,
           currency: settings.currency,
           inputType: settings.inputType,
           enabled: settings.enabled
+        };
+
+        chrome.tabs.sendMessage(tab.id, message, (response) => {
+          if (chrome.runtime.lastError) {
+            console.error(`Error sending message to tab ${tab.id}:`, chrome.runtime.lastError);
+          } else {
+            console.log(`Successfully sent message to tab ${tab.id}`);
+          }
         });
       }
     });
@@ -84,12 +92,14 @@ function toggleExtension() {
 
 function toggleInputMode() {
   settings.inputType = settings.inputType === 'hourly' ? 'monthly' : 'hourly';
-  chrome.storage.local.set({ userSettings: settings });
+  chrome.storage.local.set({ userSettings: settings }, () => {
+    updateAllTabs();
+  });
   renderInputs();
 }
 
 function renderInputs() {
-  const salaryGroup = document.getElementById('salary-input') as HTMLDivElement;
+  const salaryGroup = document.getElementById('monthly-salary-input') as HTMLDivElement;
   const hourlyGroup = document.getElementById('hourly-input') as HTMLDivElement;
   const hourlyDisplay = document.querySelector('.hourly-wage-display') as HTMLDivElement;
 
@@ -129,7 +139,7 @@ function initPopup() {
       // Initialize UI elements
       const extensionToggle = document.getElementById('extension-toggle') as HTMLInputElement;
       const inputModeToggle = document.getElementById('input-toggle') as HTMLInputElement;
-      const salaryInput = document.getElementById('salary') as HTMLInputElement;
+      const salaryInput = document.getElementById('monthly-salary') as HTMLInputElement;
       const hourlyInput = document.getElementById('hourly') as HTMLInputElement;
       const workingHoursInput = document.getElementById('working-hours') as HTMLInputElement;
       const workingDaysWeekInput = document.getElementById('working-days-week') as HTMLInputElement;
@@ -161,6 +171,7 @@ function initPopup() {
           (window as any).saveTimeout = setTimeout(() => {
             chrome.storage.local.set({ userSettings: settings }, () => {
               showStatus('Settings saved!', 'success');
+              updateAllTabs();
             });
           }, 500);
         });
@@ -177,6 +188,7 @@ function initPopup() {
           (window as any).saveTimeout = setTimeout(() => {
             chrome.storage.local.set({ userSettings: settings }, () => {
               showStatus('Settings saved!', 'success');
+              updateAllTabs();
             });
           }, 500);
         });
@@ -194,6 +206,7 @@ function initPopup() {
           (window as any).saveTimeout = setTimeout(() => {
             chrome.storage.local.set({ userSettings: settings }, () => {
               showStatus('Settings saved!', 'success');
+              updateAllTabs();
             });
           }, 500);
         });
@@ -210,6 +223,7 @@ function initPopup() {
           (window as any).saveTimeout = setTimeout(() => {
             chrome.storage.local.set({ userSettings: settings }, () => {
               showStatus('Settings saved!', 'success');
+              updateAllTabs();
             });
           }, 500);
         });
@@ -224,15 +238,13 @@ function initPopup() {
         currencySelect.addEventListener('change', (e) => {
           settings.currency = (e.target as HTMLSelectElement).value as CurrencyCode;
           renderInputs();
-          // Auto-save immediately for currency changes
-          chrome.storage.local.set({ userSettings: settings });
         });
       }
       
       renderInputs();
       
       // Initialize collapsible info panel
-      initInfoPanel();
+    //   initInfoPanel();
     });
   } catch (error) {
     console.error('Error initializing popup:', error);
