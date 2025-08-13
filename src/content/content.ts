@@ -35,7 +35,7 @@ class PriceConverter {
                 this.settings = response;
                 this.processPrices();
             } else {
-                console.error('No settings received from background script');
+                log('error', 'No settings received from background script');
             }
         });
     }

@@ -20,7 +20,7 @@ function showStatus(message: string, type: 'success' | 'error' | 'info') {
     setTimeout(() => {
       statusEl.textContent = '';
       statusEl.className = 'status-message';
-    }, 3000);
+    }, 2000);
   }
 }
 
@@ -55,7 +55,7 @@ function updateAllTabs() {
 
         chrome.tabs.sendMessage(tab.id, message, (response) => {
           if (chrome.runtime.lastError) {
-            console.error(`Error sending message to tab ${tab.id}:`, chrome.runtime.lastError);
+            log('error', `Error sending message to tab ${tab.id}:`, chrome.runtime.lastError);
           } else {
             log('info', `Successfully sent message to tab ${tab.id}`);
           }
@@ -63,7 +63,7 @@ function updateAllTabs() {
       }
     });
   }).catch(error => {
-    console.error('Error updating tabs:', error);
+    log('error', 'Error updating tabs:', error);
   });
 }
 
@@ -118,9 +118,7 @@ function initPopup() {
       } else {
         // Set reasonable defaults for new users
         settings = { 
-          ...defaultSettings,
-          monthlySalary: 800,
-          hourlyWage: 5
+          ...defaultSettings
         };
       }
 
@@ -152,16 +150,7 @@ function initPopup() {
         salaryInput.value = settings.monthlySalary?.toString() || '800';
         salaryInput.addEventListener('input', (e) => {
           settings.monthlySalary = parseFloat((e.target as HTMLInputElement).value) || 0;
-          renderInputs();
-          // Auto-save after a short delay
-          clearTimeout((window as any).saveTimeout);
-          showStatus('Saving...', 'info');
-          (window as any).saveTimeout = setTimeout(() => {
-            chrome.storage.local.set({ userSettings: settings }, () => {
-              showStatus('Settings saved!', 'success');
-              updateAllTabs();
-            });
-          }, 500);
+          autoSave();
         });
       }
 
@@ -169,16 +158,7 @@ function initPopup() {
         hourlyInput.value = settings.hourlyWage?.toString() || '5';
         hourlyInput.addEventListener('input', (e) => {
           settings.hourlyWage = parseFloat((e.target as HTMLInputElement).value) || 0;
-          renderInputs();
-          // Auto-save after a short delay
-          clearTimeout((window as any).saveTimeout);
-          showStatus('Saving...', 'info');
-          (window as any).saveTimeout = setTimeout(() => {
-            chrome.storage.local.set({ userSettings: settings }, () => {
-              showStatus('Settings saved!', 'success');
-              updateAllTabs();
-            });
-          }, 500);
+          autoSave();
         });
       }
 
@@ -187,16 +167,7 @@ function initPopup() {
         workingHoursInput.value = settings.dailyHours?.toString() || '8';
         workingHoursInput.addEventListener('input', (e) => {
           settings.dailyHours = parseFloat((e.target as HTMLInputElement).value) || 8;
-          renderInputs();
-          // Auto-save after a short delay
-          clearTimeout((window as any).saveTimeout);
-          showStatus('Saving...', 'info');
-          (window as any).saveTimeout = setTimeout(() => {
-            chrome.storage.local.set({ userSettings: settings }, () => {
-              showStatus('Settings saved!', 'success');
-              updateAllTabs();
-            });
-          }, 500);
+          autoSave();
         });
       }
 
@@ -204,16 +175,7 @@ function initPopup() {
         workingDaysWeekInput.value = settings.workingDaysPerWeek?.toString() || '5';
         workingDaysWeekInput.addEventListener('input', (e) => {
           settings.workingDaysPerWeek = parseFloat((e.target as HTMLInputElement).value) || 5;
-          renderInputs();
-          // Auto-save after a short delay
-          clearTimeout((window as any).saveTimeout);
-          showStatus('Saving...', 'info');
-          (window as any).saveTimeout = setTimeout(() => {
-            chrome.storage.local.set({ userSettings: settings }, () => {
-              showStatus('Settings saved!', 'success');
-              updateAllTabs();
-            });
-          }, 500);
+          autoSave();
         });
       }
 
@@ -225,7 +187,7 @@ function initPopup() {
         currencySelect.value = settings.currency;
         currencySelect.addEventListener('change', (e) => {
           settings.currency = (e.target as HTMLSelectElement).value as CurrencyCode;
-          renderInputs();
+          autoSave();
         });
       }
       
@@ -235,9 +197,22 @@ function initPopup() {
     //   initInfoPanel();
     });
   } catch (error) {
-    console.error('Error initializing popup:', error);
+    log('error', 'Error initializing popup:', error);
     showStatus('Error loading settings', 'error');
   }
+}
+
+function autoSave() {
+  renderInputs();
+  // Auto-save after a short delay
+  clearTimeout((window as any).saveTimeout);
+  showStatus('Saving Settings...', 'info');
+  (window as any).saveTimeout = setTimeout(() => {
+    chrome.storage.local.set({ userSettings: settings }, () => {
+      showStatus('Settings saved!', 'success');
+      updateAllTabs();
+    });
+  }, 500);
 }
 
 // --- Currency Functions ---

@@ -180,7 +180,7 @@ input:checked + .slider::before {
   text-align: center;
   min-height: 20px;
   font-weight: 500;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
 }
 
 .status-message.success {
