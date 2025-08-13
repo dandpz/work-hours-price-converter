@@ -81,7 +81,7 @@ class PriceConverter {
 
         const tooltip = document.createElement('span');
         tooltip.className = 'work-hours-tooltip';
-        tooltip.textContent = `You need to work ${hoursInfo.formatted}\nto afford this item`;
+        tooltip.textContent = `You need to work ${hoursInfo.formatted}`;
 
         container.appendChild(text);
         container.appendChild(tooltip);
