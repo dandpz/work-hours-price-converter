@@ -70,7 +70,6 @@ export class AmazonParser implements IPriceParser {
         if (this.processedElements.has(element)) {
             return true;
         }
-
         return false;
     }
 
@@ -81,14 +80,11 @@ export class AmazonParser implements IPriceParser {
         while (current && current !== document.body) {
             // Check if this element is a good candidate
             const isGoodCandidate = this.isGoodParentCandidate(current);
-
             if (isGoodCandidate) {
                 return current;
             }
-
             current = current.parentElement;
         }
-
         // Fallback to the price element's immediate parent
         return priceElement.parentElement;
     }

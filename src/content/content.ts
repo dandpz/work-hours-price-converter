@@ -25,7 +25,7 @@ class PriceConverter {
 
         // Load settings and start processing
         this.loadSettings();
-        
+
     }
 
     private loadSettings(): void {
@@ -51,37 +51,46 @@ class PriceConverter {
         priceElements.forEach(element => {
             const price = this.parser!.extractPrice(element);
             if (price && price > 0) {
-                this.convertPriceToWorkHours(element, price);
+                const convertedPrice = this.convertPriceToWorkHours(element, price);
+                this.addWorkHoursElement(element, convertedPrice);
             }
         });
         log('info', 'Price processing completed');
 
     }
 
-    private convertPriceToWorkHours(element: HTMLElement, price: number): void {
-        
-        if (!this.hourlyWage || this.hourlyWage <= 0) return;
+    private convertPriceToWorkHours(element: HTMLElement, price: number): { hours: number; formatted: string } {
+        if (!this.hourlyWage || this.hourlyWage <= 0) return { hours: 0, formatted: 'N/A' };
 
         const workHours = price / this.hourlyWage;
         const formattedHours = this.formatWorkHours(workHours);
 
-        // Create the work hours display with tooltip
-        const workHoursContainer = document.createElement('span');
-        workHoursContainer.className = 'work-hours';
-
-        const workHoursText = document.createElement('span');
-        workHoursText.textContent = formattedHours;
-        workHoursContainer.appendChild(workHoursText);
-
-        // Create tooltip
-        const tooltip = document.createElement('div');
-        tooltip.className = 'work-hours-tooltip';
-        tooltip.textContent = `This item costs ${workHours.toFixed(1)} hours of your work time`;
-        workHoursContainer.appendChild(tooltip);
-
-        // Insert after the price element
-        element.parentNode?.insertBefore(workHoursContainer, element.nextSibling);
+        return {
+            hours: workHours,
+            formatted: formattedHours
+        }
     }
+
+    private addWorkHoursElement(element: HTMLElement, hoursInfo: { hours: number; formatted: string }): void {
+        const container = document.createElement('span');
+        container.className = 'work-hours';
+        container.setAttribute('data-work-hours', 'true');
+
+        const text = document.createElement('span');
+        text.textContent = hoursInfo.formatted;
+
+        const tooltip = document.createElement('span');
+        tooltip.className = 'work-hours-tooltip';
+        tooltip.textContent = `You need to work ${hoursInfo.formatted}\nto afford this item`;
+
+        container.appendChild(text);
+        container.appendChild(tooltip);
+        
+        if (element.parentElement) {
+            element.parentElement.appendChild(container);
+        }
+    }
+
 
     private formatWorkHours(hours: number): string {
         if (hours < 1) {
@@ -154,10 +163,10 @@ let priceConverter: PriceConverter | null = null;
 // Listen for messages from the popup
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     log('info', 'Content script received message:', message);
-    
+
     if (message.type === 'UPDATE_SETTINGS') {
         log('info', 'Updating settings in content script:', message);
-        
+
         // Update settings
         if (priceConverter) {
             // Handle enabled/disabled state
@@ -171,7 +180,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         } else {
             log('info', 'PriceConverter not initialized yet');
         }
-        
+
         // Send response back to popup
         sendResponse({ success: true });
     }
