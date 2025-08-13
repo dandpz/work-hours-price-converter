@@ -1,14 +1,9 @@
 import { UserSettings } from "../types";
 import { CurrencyCode, CURRENCIES } from "../types";
+import { DEFAULT_USER_SETTINGS, DEFAULT_TARGET_WEBSITES } from "../settings";
 
 const defaultSettings: UserSettings = {
-  monthlySalary: 0,
-  hourlyWage: 0,
-  dailyHours: 8,
-  workingDaysPerWeek: 5,
-  currency: CURRENCIES.EUR.code,
-  inputType: 'monthly',
-  enabled: true
+  ...DEFAULT_USER_SETTINGS
 };
 
 let settings: UserSettings = { ...defaultSettings };
@@ -20,9 +15,9 @@ function getCurrencySymbol(currencyCode: CurrencyCode): string {
 
 function calculateHourlyWage(): string {
   if (settings.inputType === 'monthly') {
-    const monthlySalary = settings.monthlySalary || 800;
-    const dailyHours = settings.dailyHours || 8;
-    const workingDaysPerWeek = settings.workingDaysPerWeek || 5;
+    const monthlySalary = settings.monthlySalary || DEFAULT_USER_SETTINGS.monthlySalary!;
+    const dailyHours = settings.dailyHours || DEFAULT_USER_SETTINGS.dailyHours!;
+    const workingDaysPerWeek = settings.workingDaysPerWeek || DEFAULT_USER_SETTINGS.workingDaysPerWeek!;
     const totalMonthlyHours = dailyHours * workingDaysPerWeek * 4;
     const hourlyWage = monthlySalary / totalMonthlyHours;
     return `${getCurrencySymbol(settings.currency)}${hourlyWage.toFixed(2)}/hour`;
@@ -43,39 +38,23 @@ function showStatus(message: string, type: 'success' | 'error' | 'info') {
   }
 }
 
-function saveSettings() {
-  const isHourly = settings.inputType === 'hourly';
-  const value = isHourly ? settings.hourlyWage : settings.monthlySalary;
-
-  if (value === undefined || value <= 0) {
-    showStatus('Please enter a valid amount', 'error');
-    return;
-  }
-
-  // Validate working hours fields
-  if (settings.dailyHours && settings.dailyHours <= 0) {
-    showStatus('Please enter valid working hours per day', 'error');
-    return;
-  }
-
-  if (settings.workingDaysPerWeek && settings.workingDaysPerWeek <= 0) {
-    showStatus('Please enter valid working days per week', 'error');
-    return;
-  }
-
-  // Reset the other field
-  if (isHourly) settings.monthlySalary = 0;
-  else settings.hourlyWage = 0;
-
-  chrome.storage.local.set({ userSettings: settings }, () => {
-    showStatus('Settings saved!', 'success');
-    updateAllTabs();
-  });
-}
 
 function updateAllTabs() {
-  chrome.tabs.query({ url: '*://*.amazon.com/*' }, (tabs) => {
-    tabs.forEach((tab) => {
+  const targetPatterns = DEFAULT_TARGET_WEBSITES;
+  
+  // Query tabs for each target pattern
+  Promise.all(
+    targetPatterns.map(pattern => 
+      chrome.tabs.query({ url: pattern })
+    )
+  ).then(results => {
+    // Flatten and deduplicate tabs
+    const allTabs = results.flat();
+    const uniqueTabs = allTabs.filter((tab, index, self) => 
+      index === self.findIndex(t => t.id === tab.id)
+    );
+    
+    uniqueTabs.forEach((tab) => {
       if (tab.id) {
         chrome.tabs.sendMessage(tab.id, {
           type: 'UPDATE_SETTINGS',
@@ -89,6 +68,8 @@ function updateAllTabs() {
         });
       }
     });
+  }).catch(error => {
+    console.error('Error updating tabs:', error);
   });
 }
 
@@ -200,8 +181,6 @@ function initPopup() {
           }, 500);
         });
       }
-
-
 
       // Initialize working hours fields
       if (workingHoursInput) {

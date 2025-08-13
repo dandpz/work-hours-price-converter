@@ -6,6 +6,7 @@ export interface UserSettings {
   currency: CurrencyCode;
   inputType: 'monthly' | 'hourly';
   enabled: boolean;
+  targetWebsites?: string[]; // Array of website patterns to target
 }
 
 export interface PriceElement {
@@ -19,20 +20,7 @@ export interface WorkHoursInfo {
   formatted: string;
 }
 
-export const DEFAULT_USER_SETTINGS: UserSettings = {
-  monthlySalary: 800,
-  hourlyWage: 5,
-  dailyHours: 8,
-  workingDaysPerWeek: 5,
-  currency: 'EUR',
-  inputType: 'hourly',
-  enabled: true
-};
-export const DEFAULT_WORKING_HOURS_PER_MONTH = 160; // 8 hours/day × 5 days/week × 4 weeks
 
-export const STORAGE_KEYS = {
-  USER_SETTINGS: 'userSettings'
-} as const;
 
 export const CURRENCIES = {
   USD: { symbol: '$', name: 'US Dollar', code: 'USD' },

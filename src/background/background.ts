@@ -1,4 +1,5 @@
-import { UserSettings, DEFAULT_USER_SETTINGS } from '../types';
+import { UserSettings } from '../types';
+import { DEFAULT_USER_SETTINGS } from '../settings';
 
 type Message =
     | { type: 'GET_USER_SETTINGS' }
@@ -15,7 +16,7 @@ chrome.runtime.onMessage.addListener(
         switch (message.type) {
             case 'GET_USER_SETTINGS':
                 chrome.storage.local.get(['userSettings'], (result) => {
-                    const settings: UserSettings = result.userSettings || DEFAULT_USER_SETTINGS;
+                    const settings: UserSettings = result.userSettings || { ...DEFAULT_USER_SETTINGS };
                     sendResponse(settings);
                 });
                 return true;
