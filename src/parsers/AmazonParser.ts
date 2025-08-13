@@ -61,6 +61,10 @@ export class AmazonParser implements IPriceParser {
         return isNaN(price) ? null : price;
     }
 
+    clearProcessedElements(): void {
+        this.processedElements = new WeakSet();
+    }
+
     private isProcessedElement(element: HTMLElement): boolean {
         // Check if this element has already been processed
         if (this.processedElements.has(element)) {
@@ -116,11 +120,4 @@ export class AmazonParser implements IPriceParser {
             element.offsetHeight > 0;
     }
 
-    /**
-     * Clears the processed elements cache.
-     * Call this when the page content changes significantly.
-     */
-    clearProcessedElements(): void {
-        this.processedElements = new WeakSet();
-    }
 }

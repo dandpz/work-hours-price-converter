@@ -23,6 +23,6 @@ export function calculateHourlyWage(settings: UserSettings): HourlyWage | void {
             amount: hourlyWage,
             formatted: `${getCurrencySymbol(settings.currency)}${hourlyWage.toFixed(2)}/hour`
         };
-        }
+    }
     return;
 }
