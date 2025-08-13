@@ -2,6 +2,7 @@ import { ParserFactory } from '../parsers/ParserFactory';
 import { IPriceParser } from '../parsers/IPriceParser';
 import { DEFAULT_USER_SETTINGS } from '../settings';
 import { calculateHourlyWage } from '../utils';
+import { log } from '../logger';
 
 class PriceConverter {
     private parser: IPriceParser | null = null;
@@ -18,7 +19,7 @@ class PriceConverter {
         this.parser = ParserFactory.getParser(hostname);
 
         if (!this.parser) {
-            console.log('No parser available for this website:', hostname);
+            log('info', 'No parser available for this website:', hostname);
             return;
         }
 
@@ -40,7 +41,7 @@ class PriceConverter {
     }
 
     private processPrices(): void {
-        console.log('Processing prices with settings:', this.settings);
+        log('info', 'Processing prices with settings:', this.settings);
         if (!this.parser || !this.settings || !this.settings.enabled) {
             return;
         }
@@ -53,7 +54,7 @@ class PriceConverter {
                 this.convertPriceToWorkHours(element, price);
             }
         });
-        console.log('Price processing completed');
+        log('info', 'Price processing completed');
 
     }
 
@@ -152,23 +153,23 @@ let priceConverter: PriceConverter | null = null;
 
 // Listen for messages from the popup
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    console.log('Content script received message:', message);
+    log('info', 'Content script received message:', message);
     
     if (message.type === 'UPDATE_SETTINGS') {
-        console.log('Updating settings in content script:', message);
+        log('info', 'Updating settings in content script:', message);
         
         // Update settings
         if (priceConverter) {
             // Handle enabled/disabled state
             if (message.enabled === false) {
-                console.log('Disabling extension');
+                log('info', 'Disabling extension');
                 priceConverter.setEnabled(false);
             } else {
-                console.log('Updating settings and refreshing');
+                log('info', 'Updating settings and refreshing');
                 priceConverter.updateSettings(message);
             }
         } else {
-            console.log('PriceConverter not initialized yet');
+            log('info', 'PriceConverter not initialized yet');
         }
         
         // Send response back to popup

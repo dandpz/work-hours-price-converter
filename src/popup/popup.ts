@@ -2,6 +2,7 @@ import { UserSettings } from "../types";
 import { CurrencyCode, CURRENCIES } from "../types";
 import { calculateHourlyWage } from "../utils";
 import { DEFAULT_USER_SETTINGS, DEFAULT_TARGET_WEBSITES } from "../settings";
+import { log } from '../logger';
 
 const defaultSettings: UserSettings = {
   ...DEFAULT_USER_SETTINGS
@@ -56,7 +57,7 @@ function updateAllTabs() {
           if (chrome.runtime.lastError) {
             console.error(`Error sending message to tab ${tab.id}:`, chrome.runtime.lastError);
           } else {
-            console.log(`Successfully sent message to tab ${tab.id}`);
+            log('info', `Successfully sent message to tab ${tab.id}`);
           }
         });
       }

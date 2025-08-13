@@ -1,5 +1,6 @@
 import { UserSettings } from '../types';
 import { DEFAULT_USER_SETTINGS } from '../settings';
+import { log } from '../logger';
 
 type Message =
     | { type: 'GET_USER_SETTINGS' }
@@ -8,7 +9,7 @@ type Message =
 type Response<T> = (response: T) => void;
 
 chrome.runtime.onInstalled.addListener(() => {
-    console.log('Work Hours Price Converter installed!');
+    log('info', 'Work Hours Price Converter installed!');
 });
 
 chrome.runtime.onMessage.addListener(
