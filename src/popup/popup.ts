@@ -1,5 +1,6 @@
 import { UserSettings } from "../types";
 import { CurrencyCode, CURRENCIES } from "../types";
+import { calculateHourlyWage } from "../utils";
 import { DEFAULT_USER_SETTINGS, DEFAULT_TARGET_WEBSITES } from "../settings";
 
 const defaultSettings: UserSettings = {
@@ -8,22 +9,6 @@ const defaultSettings: UserSettings = {
 
 let settings: UserSettings = { ...defaultSettings };
 
-// --- Helpers ---
-function getCurrencySymbol(currencyCode: CurrencyCode): string {
-  return CURRENCIES[currencyCode].symbol || '€';
-}
-
-function calculateHourlyWage(): string {
-  if (settings.inputType === 'monthly') {
-    const monthlySalary = settings.monthlySalary || DEFAULT_USER_SETTINGS.monthlySalary!;
-    const dailyHours = settings.dailyHours || DEFAULT_USER_SETTINGS.dailyHours!;
-    const workingDaysPerWeek = settings.workingDaysPerWeek || DEFAULT_USER_SETTINGS.workingDaysPerWeek!;
-    const totalMonthlyHours = dailyHours * workingDaysPerWeek * 4;
-    const hourlyWage = monthlySalary / totalMonthlyHours;
-    return `${getCurrencySymbol(settings.currency)}${hourlyWage.toFixed(2)}/hour`;
-  }
-  return '';
-}
 
 function showStatus(message: string, type: 'success' | 'error' | 'info') {
   const statusEl = document.querySelector('.status-message') as HTMLDivElement;
@@ -111,7 +96,9 @@ function renderInputs() {
       hourlyDisplay.style.display = hasValidSalary ? 'block' : 'none';
       if (hasValidSalary) {
         const wageValue = hourlyDisplay.querySelector('.wage-value') as HTMLElement;
-        if (wageValue) wageValue.textContent = calculateHourlyWage();
+        const calculatedHourlyWage = calculateHourlyWage(settings);
+        if (wageValue) wageValue.textContent = calculatedHourlyWage?.formatted || "0.00/hour";
+        settings.hourlyWage = calculatedHourlyWage?.amount || 0.00;
       }
     }
   } else {
