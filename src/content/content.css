@@ -1,0 +1,68 @@
+/* Content script styles for Amazon Work Hours Calculator */
+
+.work-hours {
+  position: relative;
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 14px;
+  color: #d32f2f; /* red */
+  cursor: pointer;
+  text-decoration: none;
+  background: #f0f8ff;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid #007185;
+  transition: all 0.2s ease;
+}
+
+.work-hours .work-hours-tooltip {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #333;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 10000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  margin-top: 4px;
+}
+
+.work-hours:hover .work-hours-tooltip {
+  display: block;
+}
+
+.work-hours.disabled {
+  display: none;
+}
+
+.currency-warning {
+  background: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.currency-warning strong {
+  font-weight: 600;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .work-hours {
+    font-size: 12px;
+    padding: 1px 4px;
+  }
+  
+  .work-hours .work-hours-tooltip {
+    font-size: 11px;
+    padding: 6px 10px;
+  }
+} 

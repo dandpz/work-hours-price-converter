@@ -6,20 +6,51 @@ This Chrome extension helps you shop smarter by showing the "real" cost of produ
 
 ---
 
-## ✨ Features
+## Features
 - 🔄 Automatically converts product prices into work hours on supported websites.
 - ⚙️ Configurable hourly wage (set your own rate in extension settings).
 - 🌍 Works across multiple currencies.
 - 🖥 Minimal and lightweight, runs in the background without slowing down browsing.
+- 📈 Supports both monthly salary and hourly wage inputs
+
+
+## Supported E-commerce Sites
+- Amazon
+- eBay (Coming soon)
 
 ---
 
-## 🚀 Installation
+## Installation
 
 ### From Chrome Web Store
 > *(Coming soon)*
 
 ### From Source
-1. Clone the repository:
+
+1. Clone this repository
+2. Install dependencies:
    ```bash
-   git clone https://github.com/<your-username>/work-hours-price-converter.git
+   npm install
+   ```
+3. Build the extension:
+   ```bash
+   npm run build
+   ```
+4. Load the extension in Chrome:
+   - Open Chrome/Brave and go to `chrome://extensions/`
+   - Enable "Developer mode"
+   - Click "Load unpacked"
+   - Select the `dist` folder from this project
+
+## Usage
+
+1. Click the extension icon in your Chrome toolbar
+2. Configure your settings:
+   - **Enable Extension**: Toggle the extension on/off (default: ON)
+   - **Use Hourly Wage**: Switch between monthly salary and hourly wage input
+   - **Monthly Salary**: Enter your monthly salary (assumes 160 working hours per month)
+   - **Hourly Wage**: Enter your hourly wage directly
+   - **Working Hours per Day**: Set how many hours you work each day (default: 8)
+   - **Working Days per Week**: Set how many days you work each week (default: 5)
+   - **Currency**: Select your preferred currency
+3. Visit any supported website and the extension will automatically convert prices to work hours

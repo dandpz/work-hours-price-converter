@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Work Hours Calculator</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Work Hours Calculator</h2>
+    <div class="logo">
+      <img src="../assets/icon48.png" alt="extension icon"/>
+    </div>
+
+    <!-- Status Message -->
+    <div class="status-message"></div>
+
+    <!-- Enable Extension Toggle -->
+    <label class="switch">
+      <input type="checkbox" id="extension-toggle">
+      <span class="slider"></span>
+      Enable Extension
+    </label>
+
+    <!-- Use Hourly Wage Toggle -->
+    <label class="switch">
+      <input type="checkbox" id="input-toggle">
+      <span class="slider"></span>
+      Use Hourly Wage
+    </label>
+
+    <!-- Monthly Salary -->
+    <div class="form-group" id="monthly-salary-input">
+      <label for="monthly-salary">Monthly Salary:</label>
+      <input type="number" min="0" id="monthly-salary" placeholder="Enter monthly salary" value="1250">
+    </div>
+
+    <!-- Hourly Wage -->
+    <div class="form-group" id="hourly-input" style="display:none;">
+      <label for="hourly">Hourly Wage:</label>
+      <input type="number" min="0" id="hourly" placeholder="Enter hourly wage">
+    </div>
+
+    <!-- Working Hours per Day -->
+    <div class="form-group">
+      <label for="working-hours">Working Hours per Day:</label>
+      <input type="number" min="1" max="24" id="working-hours" placeholder="Enter working hours per day" value="8">
+    </div>
+
+    <!-- Working Days per Week -->
+    <div class="form-group">
+      <label for="working-days-week">Working Days per Week:</label>
+      <input type="number" min="1" max="7" id="working-days-week" placeholder="Enter working days per week" value="5">
+    </div>
+
+    <!-- Currency -->
+    <div class="form-group">
+      <label for="currency-select">Currency:</label>
+      <select id="currency-select">
+        <!-- Currency options will be populated dynamically -->
+      </select>
+    </div>
+
+    <!-- Calculated Hourly Wage -->
+    <div class="form-group hourly-wage-display" id="calculated-wage">
+      Calculated hourly wage: <span class="wage-value">€7.81/hour</span>
+    </div>
+
+    <!-- Collapsible Info Panel -->
+    <!-- <div class="info-panel">
+      <button class="info-toggle" id="info-toggle">
+        <span class="info-toggle-text">ℹ️ Show Info</span>
+        <span class="info-toggle-icon">▼</span>
+      </button>
+      <div class="info-content" id="info-content">
+        <p class="info">
+          This extension calculates how many hours you need to work to afford products on e-commerce websites based on your income.
+          Hourly wage is calculated from your monthly salary using your custom working hours and days settings.
+          Alternatively you can input your hourly wage directly.
+        </p>
+      </div>
+    </div> -->
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
