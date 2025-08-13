@@ -16,7 +16,7 @@ This Chrome extension helps you shop smarter by showing the "real" cost of produ
 
 ## Supported E-commerce Sites
 - Amazon
-- eBay
+- eBay (Coming soon)
 
 ---
 
@@ -53,5 +53,4 @@ This Chrome extension helps you shop smarter by showing the "real" cost of produ
    - **Working Hours per Day**: Set how many hours you work each day (default: 8)
    - **Working Days per Week**: Set how many days you work each week (default: 5)
    - **Currency**: Select your preferred currency
-3. Click "Save Settings"
-4. Visit any supported website and the extension will automatically convert prices to work hours
+3. Visit any supported website and the extension will automatically convert prices to work hours
