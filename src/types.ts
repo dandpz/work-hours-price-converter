@@ -2,10 +2,10 @@ export interface UserSettings {
   monthlySalary?: number;
   hourlyWage?: number;
   dailyHours?: number; // Number of hours worked per day
-  workingDays?: number; // Number of working days per week
-  currency: string;
-  inputType: 'salary' | 'hourly'; // 'salary' for monthly salary, 'hourly' for hourly wage
-  enabled: boolean; // Whether the extension is enabled
+  workingDaysPerWeek?: number; // Number of working days per week
+  currency: CurrencyCode;
+  inputType: 'monthly' | 'hourly';
+  enabled: boolean;
 }
 
 export interface PriceElement {
@@ -19,6 +19,15 @@ export interface WorkHoursInfo {
   formatted: string;
 }
 
+export const DEFAULT_USER_SETTINGS: UserSettings = {
+  monthlySalary: 800,
+  hourlyWage: 5,
+  dailyHours: 8,
+  workingDaysPerWeek: 5,
+  currency: 'EUR',
+  inputType: 'hourly',
+  enabled: true
+};
 export const DEFAULT_WORKING_HOURS_PER_MONTH = 160; // 8 hours/day × 5 days/week × 4 weeks
 
 export const STORAGE_KEYS = {
@@ -49,4 +58,4 @@ export const CURRENCIES = {
   NZD: { symbol: 'NZ$', name: 'New Zealand Dollar', code: 'NZD' }
 } as const;
 
-export type CurrencyCode = keyof typeof CURRENCIES; 
+export type CurrencyCode = keyof typeof CURRENCIES;
