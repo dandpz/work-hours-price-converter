@@ -1,0 +1,45 @@
+name: "Feature Request"
+description: "Suggest a new feature or improvement for Work Hours Price Converter"
+title: "[Feature]: "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for your idea! Please fill out the details below to describe it clearly.
+
+  - type: input
+    id: summary
+    attributes:
+      label: "Feature Summary"
+      description: "Briefly describe your idea"
+      placeholder: "e.g., Add support for multiple currencies"
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: "Motivation"
+      description: "Why is this feature important?"
+      placeholder: "e.g., Useful for users who shop in multiple currencies"
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: "Proposed Solution"
+      description: "How do you think this could be implemented?"
+      placeholder: "e.g., Add a setting to select currency and apply conversion rates"
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: "Additional Context"
+      description: "Any mockups, screenshots, or context that might help"
+      placeholder: "[Attach screenshots or sketches here]"
+    validations:
+      required: false

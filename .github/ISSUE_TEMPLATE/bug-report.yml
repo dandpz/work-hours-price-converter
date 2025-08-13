@@ -1,0 +1,67 @@
+name: "Bug Report"
+description: "Report a problem or unexpected behavior in Work Hours Price Converter"
+title: "[BUG]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a bug. Please fill out the fields below to help us reproduce and fix the issue quickly.
+
+  - type: input
+    id: summary
+    attributes:
+      label: "Short Summary"
+      description: "Briefly describe the problem"
+      placeholder: "e.g., Work hours not updating on Amazon"
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: "Expected Behavior"
+      description: "What did you expect to happen?"
+      placeholder: "e.g., Show equivalent work hours next to the price in €"
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: "Actual Behavior"
+      description: "What actually happened?"
+      placeholder: "e.g., Only the € price appears, or the extension doesn’t load"
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: "Steps to Reproduce"
+      description: "List the steps to reproduce the issue"
+      placeholder: |
+        1. Open Chrome
+        2. Go to Amazon
+        3. Enable the extension
+        4. ...
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: "Environment"
+      description: "Browser / Chrome version / OS / Extension version"
+      placeholder: "Chrome 116, macOS 14, Ext v1.0.0"
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: "Relevant Logs or Errors"
+      description: "Any console output or error logs (rendered as shell)"
+      render: shell
+    validations:
+      required: false
