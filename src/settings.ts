@@ -25,7 +25,8 @@ export const DEFAULT_TARGET_WEBSITES = [
   '*://*.amazon.com.au/*',
   '*://*.amazon.co.jp/*',
   '*://*.ebay.com/*',
-  '*://*.ebay.co.uk/*'
+  '*://*.ebay.co.uk/*',
+  '*://*.ebay.it/*',
 ] as const;
 
 // Default user settings object
@@ -42,13 +43,4 @@ export const DEFAULT_USER_SETTINGS = {
 // Storage keys
 export const STORAGE_KEYS = {
   USER_SETTINGS: 'userSettings'
-} as const;
-
-// Extension configuration
-// Note: These values should match the manifest.json file
-export const EXTENSION_CONFIG = {
-  NAME: 'Work Hours Price Converter',
-  VERSION: '1.0.0',
-  DESCRIPTION: 'Convert product prices into the work hours required based on your hourly wage.',
-  AUTHOR: 'Your Name'
 } as const;
