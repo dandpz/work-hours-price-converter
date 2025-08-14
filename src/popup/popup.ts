@@ -89,7 +89,7 @@ function toggleInputMode() {
 
 function renderInputs() {
   const salaryGroup = document.getElementById('monthly-salary-input') as HTMLDivElement;
-  const hourlyGroup = document.getElementById('hourly-input') as HTMLDivElement;
+  const hourlyGroup = document.getElementById('hourly-salary-input') as HTMLDivElement;
   const hourlyDisplay = document.querySelector('.hourly-wage-display') as HTMLDivElement;
 
   if (settings.inputType === 'monthly') {
@@ -128,8 +128,8 @@ function initPopup() {
       // Initialize UI elements
       const extensionToggle = document.getElementById('extension-toggle') as HTMLInputElement;
       const inputModeToggle = document.getElementById('input-toggle') as HTMLInputElement;
-      const salaryInput = document.getElementById('monthly-salary') as HTMLInputElement;
-      const hourlyInput = document.getElementById('hourly') as HTMLInputElement;
+      const monthlySalaryInput = document.getElementById('monthly-salary') as HTMLInputElement;
+      const hourlySalaryInput = document.getElementById('hourly-salary') as HTMLInputElement;
       const workingHoursInput = document.getElementById('working-hours') as HTMLInputElement;
       const workingDaysWeekInput = document.getElementById('working-days-week') as HTMLInputElement;
       const currencySelect = document.getElementById('currency-select') as HTMLSelectElement;
@@ -149,17 +149,17 @@ function initPopup() {
         newInputModeToggle.addEventListener('change', toggleInputMode);
       }
 
-      if (salaryInput) {
-        salaryInput.value = settings.monthlySalary?.toString() || '800';
-        salaryInput.addEventListener('input', (e) => {
+      if (monthlySalaryInput) {
+        monthlySalaryInput.value = settings.monthlySalary?.toString() || '800';
+        monthlySalaryInput.addEventListener('input', (e) => {
           settings.monthlySalary = parseFloat((e.target as HTMLInputElement).value) || 0;
           autoSave();
         });
       }
 
-      if (hourlyInput) {
-        hourlyInput.value = settings.hourlyWage?.toString() || '5';
-        hourlyInput.addEventListener('input', (e) => {
+      if (hourlySalaryInput) {
+        hourlySalaryInput.value = settings.hourlyWage?.toString() || '5';
+        hourlySalaryInput.addEventListener('input', (e) => {
           settings.hourlyWage = parseFloat((e.target as HTMLInputElement).value) || 0;
           autoSave();
         });
