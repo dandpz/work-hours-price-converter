@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Work Hours Price Converter",
   "description": "Convert product prices into the work hours required based on your hourly wage.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "icons": {
     "16": "assets/icon16.png",
     "48": "assets/icon48.png",

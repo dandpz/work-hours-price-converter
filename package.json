@@ -1,6 +1,6 @@
 {
   "name": "work-hours-price-converter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Chrome extension to convert product prices on any supported e-commerce website into the number of work hours needed to afford them, based on your hourly wage.",
   "devDependencies": {
     "@types/chrome": "^0.1.3",
