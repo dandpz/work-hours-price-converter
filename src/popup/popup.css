@@ -170,38 +170,48 @@ input:checked + .slider::before {
   transform: translateX(20px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
-
-/* Status message */
-.status-message {
-  padding: 12px 16px;
-  margin: 16px 0;
+/* Status overlay */
+.status-overlay {
+  position: fixed;
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+  padding: 5px 5px;
   border-radius: 8px;
-  font-size: 13px;
-  text-align: center;
-  min-height: 20px;
+  font-size: 10px;
   font-weight: 500;
-  transition: all 0.25s ease;
+  text-align: center;
+  min-width: 200px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
-.status-message.success {
+.status-overlay.show {
+  opacity: 0.75;
+  transform: translateX(-50%) translateY(0);
+}
+
+.status-overlay.success {
   background: linear-gradient(135deg, #c6f6d5 0%, #9ae6b4 100%);
   color: #22543d;
   border: 1px solid #68d391;
   box-shadow: 0 2px 8px rgba(104, 211, 145, 0.2);
 }
 
-.status-message.error {
-  background: linear-gradient(135deg, #fed7d7 0%, #feb2b2 100%);
-  color: #742a2a;
-  border: 1px solid #fc8181;
-  box-shadow: 0 2px 8px rgba(252, 129, 129, 0.2);
-}
-
-.status-message.info {
+.status-overlay.info {
   background: linear-gradient(135deg, #bee3f8 0%, #90cdf4 100%);
   color: #2a4365;
   border: 1px solid #63b3ed;
   box-shadow: 0 2px 8px rgba(99, 179, 237, 0.2);
+}
+
+.status-overlay.error {
+  background: linear-gradient(135deg, #fed7d7 0%, #feb2b2 100%);
+  color: #742a2a;
+  border: 1px solid #fc8181;
+  box-shadow: 0 2px 8px rgba(252, 129, 129, 0.2);
 }
 
 /* Hourly wage display */

@@ -8,6 +8,7 @@ yarn-error.log*
 dist/
 *.js.map
 *.tsbuildinfo
+*.zip
 
 # IDE files
 .vscode/
