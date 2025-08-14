@@ -10,17 +10,42 @@
   },
   "permissions": [
     "storage",
-    "activeTab",
-    "scripting"
+    "scripting",
+    "activeTab"
   ],
   "background": {
     "service_worker": "background/background.js"
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["content/content.js"],
-      "css": ["content/content.css"],
+      "matches": [
+        "https://*.amazon.com/*",
+        "https://*.amazon.co.uk/*",
+        "https://*.amazon.de/*",
+        "https://*.amazon.fr/*",
+        "https://*.amazon.it/*",
+        "https://*.amazon.es/*",
+        "https://*.amazon.ca/*",
+        "https://*.amazon.com.au/*",
+        "https://*.amazon.co.jp/*",
+        "https://*.amazon.com.mx/*",
+        "https://*.amazon.com.br/*",
+        "https://*.amazon.com.tr/*",
+        "https://*.amazon.nl/*",
+        "https://*.amazon.se/*",
+        "https://*.amazon.pl/*",
+        "https://*.amazon.sg/*",
+        "https://*.amazon.ae/*",
+        "https://*.amazon.sa/*",
+        "https://*.amazon.eg/*",
+        "https://*.amazon.in/*"
+      ],
+      "js": [
+        "content/content.js"
+      ],
+      "css": [
+        "content/content.css"
+      ],
       "run_at": "document_end"
     }
   ],
