@@ -12,14 +12,17 @@ let settings: UserSettings = { ...defaultSettings };
 
 
 function showStatus(message: string, type: 'success' | 'error' | 'info') {
-  const statusEl = document.querySelector('.status-message') as HTMLDivElement;
+  const statusEl = document.querySelector('#statusOverlay') as HTMLDivElement;
   if (!statusEl) return;
+  // Clear previous type classes
+  statusEl.classList.remove('success', 'error', 'info');
+  // Add show and the current type
+  statusEl.classList.add('show', type);
   statusEl.textContent = message;
-  statusEl.className = `status-message ${type}`;
   if (type !== 'info') {
     setTimeout(() => {
+      statusEl.classList.remove('show', type);
       statusEl.textContent = '';
-      statusEl.className = 'status-message';
     }, 2000);
   }
 }
@@ -206,7 +209,6 @@ function autoSave() {
   renderInputs();
   // Auto-save after a short delay
   clearTimeout((window as any).saveTimeout);
-  showStatus('Saving Settings...', 'info');
   (window as any).saveTimeout = setTimeout(() => {
     chrome.storage.local.set({ userSettings: settings }, () => {
       showStatus('Settings saved!', 'success');
@@ -240,6 +242,7 @@ function populateCurrencySelect() {
 }
 
 // --- Info Panel Functions ---
+// Temporary disabled, as the info panel is not currently used in the popup
 function initInfoPanel() {
   const infoToggle = document.getElementById('info-toggle') as HTMLButtonElement;
   const infoContent = document.getElementById('info-content') as HTMLDivElement;
