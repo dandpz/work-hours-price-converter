@@ -42,6 +42,16 @@ This Chrome extension helps you shop smarter by showing the "real" cost of produ
    - Click "Load unpacked"
    - Select the `dist` folder from this project
 
+### From ZIP
+1. Download the latest release ZIP from the [Releases](https://github.com/dandpz/work-hours-price-converter/releases)
+2. Extract the ZIP file
+3. Load the extension in Chrome:
+   - Open Chrome/Brave and go to `chrome://extensions/`
+   - Enable "Developer mode"
+   - Click "Load unpacked"
+   - Select the extracted folder
+
+
 ## Usage
 
 1. Click the extension icon in your Chrome toolbar

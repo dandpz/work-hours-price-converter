@@ -9,6 +9,7 @@
   },
   "type": "module",
   "scripts": {
-    "build": "node build.js"
+    "build": "node build.js",
+    "zip": "npm run build && VERSION=$(node -p \"require('./package.json').version\") && cd dist && zip -r ../work-hours-price-converter-$VERSION.zip ."
   }
 }
