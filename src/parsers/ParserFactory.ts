@@ -1,5 +1,6 @@
 import { IPriceParser } from './IPriceParser';
 import { AmazonParser } from './AmazonParser';
+import { DEFAULT_TARGET_WEBSITES } from '../settings';
 
 export class ParserFactory {
     private static parsers: Map<string, IPriceParser> = new Map();
@@ -47,6 +48,9 @@ export class ParserFactory {
      * @returns Array of hostname patterns that have parsers
      */
     static getSupportedHostnames(): string[] {
-        return ['amazon.com', 'amazon.co.uk', 'amazon.de', 'amazon.fr', 'amazon.it', 'amazon.es', 'amazon.ca', 'amazon.com.au', 'amazon.co.jp'];
+        return DEFAULT_TARGET_WEBSITES.map(pattern => {
+            const url = new URL(pattern.replace('*://', 'https://'));
+            return url.hostname;
+        });
     }
 }
