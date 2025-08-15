@@ -6,7 +6,6 @@ export interface UserSettings {
   currency: CurrencyCode;
   inputType: 'monthly' | 'hourly';
   enabled: boolean;
-  targetWebsites?: string[]; // Array of website patterns to target
 }
 
 export interface PriceElement {
@@ -14,13 +13,6 @@ export interface PriceElement {
   price: number;
   originalText: string;
 }
-
-export interface WorkHoursInfo {
-  hours: number;
-  formatted: string;
-}
-
-
 
 export const CURRENCIES = {
   USD: { symbol: '$', name: 'US Dollar', code: 'USD' },
