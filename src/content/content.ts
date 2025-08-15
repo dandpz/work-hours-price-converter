@@ -99,8 +99,8 @@ class PriceConverter {
         } else if (hours < this.settings.dailyHours) {
             return `${hours.toFixed(1)}h`;
         } else {
-            const days = Math.floor(hours / 8);
-            const remainingHours = hours % 8;
+            const days = Math.floor(hours / this.settings.dailyHours);
+            const remainingHours = hours % this.settings.dailyHours;
             if (remainingHours > 0) {
                 return `${days}d ${remainingHours.toFixed(1)}h`;
             } else {
