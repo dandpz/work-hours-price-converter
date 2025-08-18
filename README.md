@@ -23,7 +23,7 @@ This Chrome extension helps you shop smarter by showing the "real" cost of produ
 ## Installation
 
 ### From Chrome Web Store
-> *(Coming soon)*
+🚀 Install it directly from the [Chrome Web Store](https://chromewebstore.google.com/detail/bnaieecnemgogcobmbnminmkbleoabfi).
 
 ### From Source
 
