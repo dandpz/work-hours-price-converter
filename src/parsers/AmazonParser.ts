@@ -1,140 +1,145 @@
-import { IPriceParser } from "./IPriceParser";
+import type { IPriceParser } from "./IPriceParser";
 
 export class AmazonParser implements IPriceParser {
-    private processedElements: WeakSet<HTMLElement> = new WeakSet();
+  private processedElements: WeakSet<HTMLElement> = new WeakSet();
 
-    getPriceElements(): HTMLElement[] {
-        const selectors = [
-            // Product listing pages - target only the main visible price elements
-            '[data-component-type="s-search-result"] .a-price .a-price-whole:not([aria-hidden="true"]):not(.a-offscreen)',
-            '[data-component-type="s-search-result"] .a-price .a-offscreen:not([aria-hidden="true"]):not(.a-price-whole)',
+  getPriceElements(): HTMLElement[] {
+    const selectors = [
+      // Product listing pages - target only the main visible price elements
+      '[data-component-type="s-search-result"] .a-price .a-price-whole:not([aria-hidden="true"]):not(.a-offscreen)',
+      '[data-component-type="s-search-result"] .a-price .a-offscreen:not([aria-hidden="true"]):not(.a-price-whole)',
 
-            // Product detail pages - target only the main visible price elements
-            '.a-price .a-offscreen:not([aria-hidden="true"]):not(.a-price-whole)',
-            '.a-price .a-price-whole:not([aria-hidden="true"]):not(.a-offscreen)',
+      // Product detail pages - target only the main visible price elements
+      '.a-price .a-offscreen:not([aria-hidden="true"]):not(.a-price-whole)',
+      '.a-price .a-price-whole:not([aria-hidden="true"]):not(.a-offscreen)',
 
-            // Deal pages - target only the main visible price elements
-            '.a-price-deal .a-offscreen:not([aria-hidden="true"]):not(.a-price-whole)',
-            '.a-price-deal .a-price-whole:not([aria-hidden="true"]):not(.a-offscreen)',
+      // Deal pages - target only the main visible price elements
+      '.a-price-deal .a-offscreen:not([aria-hidden="true"]):not(.a-price-whole)',
+      '.a-price-deal .a-price-whole:not([aria-hidden="true"]):not(.a-offscreen)',
 
-            // Alternative price selectors - target only the main visible price elements
-            '.a-price[data-a-color="price"] .a-offscreen:not([aria-hidden="true"]):not(.a-price-whole)',
-            '.a-price[data-a-color="secondary"] .a-offscreen:not([aria-hidden="true"]):not(.a-price-whole)',
+      // Alternative price selectors - target only the main visible price elements
+      '.a-price[data-a-color="price"] .a-offscreen:not([aria-hidden="true"]):not(.a-price-whole)',
+      '.a-price[data-a-color="secondary"] .a-offscreen:not([aria-hidden="true"]):not(.a-price-whole)',
 
-            // Prime day and other special pricing - target only the main visible price elements
-            '.a-price.a-text-price .a-offscreen:not([aria-hidden="true"]):not(.a-price-whole)',
-            '.a-price.a-text-price .a-price-whole:not([aria-hidden="true"]):not(.a-offscreen)'
-        ];
+      // Prime day and other special pricing - target only the main visible price elements
+      '.a-price.a-text-price .a-offscreen:not([aria-hidden="true"]):not(.a-price-whole)',
+      '.a-price.a-text-price .a-price-whole:not([aria-hidden="true"]):not(.a-offscreen)',
+    ];
 
-        const elements: HTMLElement[] = [];
-        const processedParents = new Set<HTMLElement>();
+    const elements: HTMLElement[] = [];
+    const processedParents = new Set<HTMLElement>();
 
-        for (const selector of selectors) {
-            const found = document.querySelectorAll(selector);
-            found.forEach((el) => {
-                if (el instanceof HTMLElement && !this.isProcessedElement(el) && this.isVisibleElement(el)) {
-                    // Check if we've already processed a price element from this parent
-                    const parent = this.findBestParentElement(el);
-                    if (parent && !processedParents.has(parent)) {
-                        elements.push(el);
-                        processedParents.add(parent);
-                        // Mark this element as processed
-                        this.processedElements.add(el);
-                    }
-                }
-            });
+    for (const selector of selectors) {
+      const found = document.querySelectorAll(selector);
+      found.forEach((el) => {
+        if (
+          el instanceof HTMLElement &&
+          !this.isProcessedElement(el) &&
+          this.isVisibleElement(el)
+        ) {
+          // Check if we've already processed a price element from this parent
+          const parent = this.findBestParentElement(el);
+          if (parent && !processedParents.has(parent)) {
+            elements.push(el);
+            processedParents.add(parent);
+            // Mark this element as processed
+            this.processedElements.add(el);
+          }
         }
-
-        return elements;
+      });
     }
 
-    extractPrice(element: HTMLElement): number | null {
-        // Extract the price text from the element
-        let priceText = element.textContent?.trim();
-        if (!priceText) return null;
+    return elements;
+  }
 
-        // Handle different number formats
-        if (priceText.includes('.') && priceText.includes(',')) {
-            // Both . and , present - need to determine format
-            const lastCommaIndex = priceText.lastIndexOf(',');
-            const lastDotIndex = priceText.lastIndexOf('.');
+  extractPrice(element: HTMLElement): number | null {
+    // Extract the price text from the element
+    let priceText = element.textContent?.trim();
+    if (!priceText) return null;
 
-            if (lastCommaIndex > lastDotIndex) {
-                // European format: 1.299,99 -> 1299.99
-                priceText = priceText.replace(/\./g, '').replace(',', '.');
-            } else {
-                // US format: 1,299.99 -> 1299.99
-                priceText = priceText.replace(/,/g, '');
-            }
-        } else if (priceText.includes(',')) {
-            // Only comma present
-            const parts = priceText.split(',');
-            if (parts.length === 2 && parts[1] && parts[1].length <= 2) {
-                // Likely European decimal: 999,99 -> 999.99
-                priceText = priceText.replace(',', '.');
-            } else {
-                // Likely US thousand separator: 1,299 -> 1299
-                priceText = priceText.replace(/,/g, '');
-            }
-        }
+    // Handle different number formats
+    if (priceText.includes(".") && priceText.includes(",")) {
+      // Both . and , present - need to determine format
+      const lastCommaIndex = priceText.lastIndexOf(",");
+      const lastDotIndex = priceText.lastIndexOf(".");
 
-        const price = parseFloat(priceText);
-        return isNaN(price) ? null : price;
+      if (lastCommaIndex > lastDotIndex) {
+        // European format: 1.299,99 -> 1299.99
+        priceText = priceText.replace(/\./g, "").replace(",", ".");
+      } else {
+        // US format: 1,299.99 -> 1299.99
+        priceText = priceText.replace(/,/g, "");
+      }
+    } else if (priceText.includes(",")) {
+      // Only comma present
+      const parts = priceText.split(",");
+      if (parts.length === 2 && parts[1] && parts[1].length <= 2) {
+        // Likely European decimal: 999,99 -> 999.99
+        priceText = priceText.replace(",", ".");
+      } else {
+        // Likely US thousand separator: 1,299 -> 1299
+        priceText = priceText.replace(/,/g, "");
+      }
     }
 
-    clearProcessedElements(): void {
-        this.processedElements = new WeakSet();
+    const price = parseFloat(priceText);
+    return Number.isNaN(price) ? null : price;
+  }
+
+  clearProcessedElements(): void {
+    this.processedElements = new WeakSet();
+  }
+
+  private isProcessedElement(element: HTMLElement): boolean {
+    // Check if this element has already been processed
+    if (this.processedElements.has(element)) {
+      return true;
     }
+    return false;
+  }
 
-    private isProcessedElement(element: HTMLElement): boolean {
-        // Check if this element has already been processed
-        if (this.processedElements.has(element)) {
-            return true;
-        }
-        return false;
+  private findBestParentElement(priceElement: HTMLElement): HTMLElement | null {
+    // Try to find a good parent that contains the price but isn't too large
+    let current = priceElement.parentElement;
+
+    while (current && current !== document.body) {
+      // Check if this element is a good candidate
+      const isGoodCandidate = this.isGoodParentCandidate(current);
+      if (isGoodCandidate) {
+        return current;
+      }
+      current = current.parentElement;
     }
+    // Fallback to the price element's immediate parent
+    return priceElement.parentElement;
+  }
 
-    private findBestParentElement(priceElement: HTMLElement): HTMLElement | null {
-        // Try to find a good parent that contains the price but isn't too large
-        let current = priceElement.parentElement;
+  private isGoodParentCandidate(element: HTMLElement): boolean {
+    // Avoid very large containers
+    if (element.children.length > 10) return false;
 
-        while (current && current !== document.body) {
-            // Check if this element is a good candidate
-            const isGoodCandidate = this.isGoodParentCandidate(current);
-            if (isGoodCandidate) {
-                return current;
-            }
-            current = current.parentElement;
-        }
-        // Fallback to the price element's immediate parent
-        return priceElement.parentElement;
-    }
+    // Avoid elements that are likely to be containers for multiple products
+    const text = element.textContent || "";
+    if (text.length > 200) return false;
 
-    private isGoodParentCandidate(element: HTMLElement): boolean {
-        // Avoid very large containers
-        if (element.children.length > 10) return false;
+    // Prefer elements that are likely to be price containers
+    const className = element.className.toLowerCase();
+    const goodClasses = ["price", "cost", "amount", "value"];
+    const hasGoodClass = goodClasses.some((cls) => className.includes(cls));
 
-        // Avoid elements that are likely to be containers for multiple products
-        const text = element.textContent || '';
-        if (text.length > 200) return false;
+    return hasGoodClass || element.children.length <= 3;
+  }
 
-        // Prefer elements that are likely to be price containers
-        const className = element.className.toLowerCase();
-        const goodClasses = ['price', 'cost', 'amount', 'value'];
-        const hasGoodClass = goodClasses.some(cls => className.includes(cls));
-
-        return hasGoodClass || element.children.length <= 3;
-    }
-
-    private isVisibleElement(element: HTMLElement): boolean {
-        // Check if element is visible and not hidden
-        const style = window.getComputedStyle(element);
-        return style.display !== 'none' &&
-            style.visibility !== 'hidden' &&
-            style.opacity !== '0' &&
-            !element.hasAttribute('aria-hidden') &&
-            element.offsetWidth > 0 &&
-            element.offsetHeight > 0;
-    }
-
+  private isVisibleElement(element: HTMLElement): boolean {
+    // Check if element is visible and not hidden
+    const style = window.getComputedStyle(element);
+    return (
+      style.display !== "none" &&
+      style.visibility !== "hidden" &&
+      style.opacity !== "0" &&
+      !element.hasAttribute("aria-hidden") &&
+      element.offsetWidth > 0 &&
+      element.offsetHeight > 0
+    );
+  }
 }
