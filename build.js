@@ -1,6 +1,6 @@
+import fs from "node:fs";
+import path from "node:path";
 import { build } from "esbuild";
-import fs from "fs";
-import path from "path";
 
 const srcDir = "src";
 const pubDir = "public";
@@ -15,7 +15,7 @@ fs.mkdirSync(outDir, { recursive: true });
 // General config
 const buildOptions = {
   bundle: true,
-  minify: process.env.NODE_ENV === "production",
+  minify: process.env.MINIFY === "true",
   sourcemap: false,
   target: ["chrome109"],
   platform: "browser",
