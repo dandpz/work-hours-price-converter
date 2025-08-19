@@ -4,9 +4,7 @@ import type { IPriceParser } from "./IPriceParser";
 
 const parsers: Map<string, IPriceParser> = new Map();
 
-const parserMap = new Map([
-  ['amazon', AmazonParser],
-]);
+const parserMap = new Map([["amazon", AmazonParser]]);
 
 /**
  * Gets the appropriate parser for the current website, with caching.
@@ -14,7 +12,6 @@ const parserMap = new Map([
  * @returns The appropriate price parser, or null if no parser is available.
  */
 export function getParser(hostname: string) {
-
   if (parsers.has(hostname)) {
     return parsers.get(hostname);
   }

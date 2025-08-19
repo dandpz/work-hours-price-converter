@@ -257,7 +257,7 @@ function autoSave() {
   renderInputs();
   // Auto-save after a short delay
   // biome-ignore lint/suspicious/noExplicitAny: <This is an accepted type here>
-    clearTimeout((window as any).saveTimeout);
+  clearTimeout((window as any).saveTimeout);
   // biome-ignore lint/suspicious/noExplicitAny: <This is an accepted type here>
   (window as any).saveTimeout = setTimeout(() => {
     chrome.storage.local.set({ userSettings: settings }, () => {

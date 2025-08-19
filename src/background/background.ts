@@ -13,7 +13,11 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 chrome.runtime.onMessage.addListener(
-  (message: Message, _sender, sendResponse: Response<UserSettings | object>) => {
+  (
+    message: Message,
+    _sender,
+    sendResponse: Response<UserSettings | object>,
+  ) => {
     switch (message.type) {
       case "GET_USER_SETTINGS":
         chrome.storage.local.get(["userSettings"], (result) => {
