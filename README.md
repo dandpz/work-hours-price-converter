@@ -1,10 +1,14 @@
-# Work Hours Price Converter
+<div align="center">
+   <h1>Work Hours Price Converter</h1>
+   <img src='./public/assets/icon128.png'>
+</div>
+
+---
 
 Convert product prices on any e-commerce website into the number of work hours needed to afford them, based on your hourly wage.
 
 This Chrome extension helps you shop smarter by showing the "real" cost of products in terms of your time, not just money.
 
----
 
 ## Features
 - 🔄 Automatically converts product prices into work hours on supported websites.
@@ -64,3 +68,7 @@ This Chrome extension helps you shop smarter by showing the "real" cost of produ
    - **Working Days per Week**: Set how many days you work each week (default: 5)
    - **Currency**: Select your preferred currency
 3. Visit any supported website and the extension will automatically convert prices to work hours
+
+## Contributing
+
+Please read the [CONTRIBUTING.md](./CONTRIBUTING.md) file for details on how to contribute to this project.

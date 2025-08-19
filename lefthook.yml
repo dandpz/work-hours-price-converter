@@ -1,0 +1,12 @@
+# lefthook.yaml
+# Automatically runs Biome checks and formatting before a commit.
+pre-commit:
+  commands:
+    biome-check:
+      run: npm run biome:check:apply
+
+# Validate commit messages
+commit-msg:
+  commands:
+    "lint commit message":
+      run: npm run commitlint --edit {1}

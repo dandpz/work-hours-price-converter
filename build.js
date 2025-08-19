@@ -1,6 +1,6 @@
+import fs from "node:fs";
+import path from "node:path";
 import { build } from "esbuild";
-import fs from "fs";
-import path from "path";
 
 const srcDir = "src";
 const pubDir = "public";
@@ -15,7 +15,7 @@ fs.mkdirSync(outDir, { recursive: true });
 // General config
 const buildOptions = {
   bundle: true,
-  minify: process.env.NODE_ENV === "production",
+  minify: true,
   sourcemap: false,
   target: ["chrome109"],
   platform: "browser",
@@ -38,20 +38,25 @@ function copyFolder(src, dest) {
     const destPath = path.join(dest, file);
     if (fs.lstatSync(srcPath).isDirectory()) {
       copyFolder(srcPath, destPath);
-    } else if (file.endsWith(".css") || file.endsWith(".html") || file.endsWith(".png") || file.endsWith(".json")) {
+    } else if (
+      file.endsWith(".css") ||
+      file.endsWith(".html") ||
+      file.endsWith(".png") ||
+      file.endsWith(".json")
+    ) {
       fs.copyFileSync(srcPath, destPath);
     }
   });
 }
-        
+
 Promise.all(
   Object.entries(entries).map(([outfile, infile]) =>
     build({
       entryPoints: [infile],
       outfile: path.join(outDir, outfile),
       ...buildOptions,
-    })
-  )
+    }),
+  ),
 )
   .then(() => {
     console.log("TypeScript build completed!");
@@ -63,7 +68,7 @@ Promise.all(
   })
   .then(() => {
     // Copy Manifest
-    fs.copyFileSync('src/manifest.json', 'dist/manifest.json');
+    fs.copyFileSync("src/manifest.json", "dist/manifest.json");
     console.log("manifest copied!");
   })
   .then(() => {

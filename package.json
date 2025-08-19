@@ -3,13 +3,22 @@
   "version": "1.0.2",
   "description": "Chrome extension to convert product prices on any supported e-commerce website into the number of work hours needed to afford them, based on your hourly wage.",
   "devDependencies": {
+    "@biomejs/biome": "2.2.0",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@types/chrome": "^0.1.4",
     "@types/node": "^24.2.1",
-    "esbuild": "^0.25.9"
+    "esbuild": "^0.25.9",
+    "lefthook": "^1.12.3"
   },
   "type": "module",
   "scripts": {
     "build": "node build.js",
-    "zip": "npm run build && VERSION=$(node -p \"require('./package.json').version\") && cd dist && zip -r ../work-hours-price-converter-$VERSION.zip ."
+    "zip": "npm run build && VERSION=$(node -p \"require('./package.json').version\") && cd dist && zip -r ../work-hours-price-converter-$VERSION.zip .",
+    "biome:lint": "biome lint ./src",
+    "biome:format": "biome format ./src --write",
+    "biome:check": "biome check ./src",
+    "biome:check:apply": "biome check ./src --write",
+    "commitlint": "commitlint --edit"
   }
 }
