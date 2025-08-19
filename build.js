@@ -15,7 +15,7 @@ fs.mkdirSync(outDir, { recursive: true });
 // General config
 const buildOptions = {
   bundle: true,
-  minify: process.env.MINIFY === "true",
+  minify: true,
   sourcemap: false,
   target: ["chrome109"],
   platform: "browser",
