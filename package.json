@@ -16,6 +16,6 @@
     "biome:lint": "biome lint ./src",
     "biome:format": "biome format ./src --write",
     "biome:check": "biome check ./src",
-    "biome:check:apply": "biome check ./src --apply"
+    "biome:check:apply": "biome check ./src --write"
   }
 }
