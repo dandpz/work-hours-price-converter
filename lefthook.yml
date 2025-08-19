@@ -1,0 +1,6 @@
+# lefthook.yaml
+# Automatically runs Biome checks and formatting before a commit.
+pre-commit:
+  commands:
+    biome-check:
+      run: npm run biome:check:apply

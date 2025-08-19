@@ -6,7 +6,8 @@
     "@biomejs/biome": "2.2.0",
     "@types/chrome": "^0.1.4",
     "@types/node": "^24.2.1",
-    "esbuild": "^0.25.9"
+    "esbuild": "^0.25.9",
+    "lefthook": "^1.12.3"
   },
   "type": "module",
   "scripts": {
