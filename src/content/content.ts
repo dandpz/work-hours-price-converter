@@ -199,10 +199,21 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   }
 });
 
-// Initialize when DOM is ready
+chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+  if (message.message === "CHANGED_URL") {
+    log("info", "URL changed to:", message.url);
+    if (priceConverter) {
+      setTimeout(() => {
+        priceConverter?.refresh();
+      }, 1500); // Delay to allow page content to load
+    }
+    sendResponse({ success: true });
+  }
+});
+
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", () => {
-    priceConverter = new PriceConverter();
+    priceConverter?.refresh();
   });
 } else {
   priceConverter = new PriceConverter();
