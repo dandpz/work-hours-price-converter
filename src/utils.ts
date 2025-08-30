@@ -36,68 +36,26 @@ export function calculateHourlyWage(settings: UserSettings): HourlyWage | null {
 }
 
 export function extractPriceFromText(text: string): number | null {
-  let priceText = text;
-  // Remove currency symbols and non-breaking spaces
-  priceText = priceText.replace(/\s+/g, "").replace(/[^\d.,-]/g, "");
+  const priceText = text.replace(/\s+/g, "").replace(/[^\d.,-]/g, "");
 
-  // Try parsing with known locales
-  const locales = [
-    "en-US",
-    "en-GB",
-    "de-DE",
-    "fr-FR",
-    "it-IT",
-    "es-ES",
-    "en-CA",
-    "en-AU",
-    "ja-JP",
-    "es-MX",
-    "pt-BR",
-    "tr-TR",
-    "nl-NL",
-    "sv-SE",
-    "pl-PL",
-    "en-SG",
-    "ar-AE",
-    "ar-SA",
-    "ar-EG",
-    "en-IN",
-  ];
+  // Match last separator as decimal only if followed by 1 or 2 digits
+  const match = priceText.match(/([.,])(\d{1,2})$/);
+  let normalized = priceText;
 
-  for (const locale of locales) {
-    const formatter = new Intl.NumberFormat(locale);
-    const currentFormat = formatter.format(1234.56); // formats according to locale
+  if (match) {
+    const decimalChar = match[1];
+    const decimalIndex = priceText.lastIndexOf(decimalChar);
 
-    // Build regex dynamically from locale format
-    const decimalSeparator = currentFormat.includes(",") ? "," : ".";
-    const thousandSeparator = decimalSeparator === "." ? "," : ".";
-
-    // Normalize string
-    let normalized = priceText;
-
-    // Remove thousand separators
-    const regexThousand = new RegExp(
-      `\\${thousandSeparator}(?=\\d{3}(\\${thousandSeparator}|${decimalSeparator}|$))`,
-      "g",
-    );
-    normalized = normalized.replace(regexThousand, "");
-
-    // Replace decimal separator with "."
-    if (decimalSeparator !== ".") {
-      const regexDecimal = new RegExp(`\\${decimalSeparator}`, "g");
-      // only replace the last occurrence
-      const lastIndex = normalized.lastIndexOf(decimalSeparator);
-      if (lastIndex !== -1) {
-        normalized =
-          normalized.substring(0, lastIndex).replace(regexDecimal, "") +
-          "." +
-          normalized.substring(lastIndex + 1);
-      }
-    }
-
-    const parsed = parseFloat(normalized);
-    if (!Number.isNaN(parsed)) return parsed;
+    // Remove all other dots/commas (thousand separators)
+    normalized =
+      normalized.slice(0, decimalIndex).replace(/[.,]/g, "") +
+      "." +
+      normalized.slice(decimalIndex + 1);
+  } else {
+    // No valid decimal: remove all separators
+    normalized = normalized.replace(/[.,]/g, "");
   }
 
-  return null;
+  const parsed = parseFloat(normalized);
+  return Number.isNaN(parsed) ? null : parsed;
 }

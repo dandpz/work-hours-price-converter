@@ -7,9 +7,12 @@
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
     "@types/chrome": "^0.1.4",
+    "@types/jest": "^30.0.0",
     "@types/node": "^24.2.1",
     "esbuild": "^0.25.9",
-    "lefthook": "^1.12.3"
+    "jest": "^30.1.1",
+    "lefthook": "^1.12.3",
+    "ts-jest": "^29.4.1"
   },
   "type": "module",
   "scripts": {
@@ -19,6 +22,9 @@
     "biome:format": "biome format ./src --write",
     "biome:check": "biome check ./src",
     "biome:check:apply": "biome check ./src --write",
-    "commitlint": "commitlint --edit"
+    "commitlint": "commitlint --edit",
+    "test": "jest --passWithNoTests",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   }
 }
