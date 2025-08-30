@@ -61,7 +61,7 @@ export function extractPriceFromText(text: string): number | null {
     "ar-AE",
     "ar-SA",
     "ar-EG",
-    "en-IN"
+    "en-IN",
   ];
 
   for (const locale of locales) {
@@ -76,7 +76,10 @@ export function extractPriceFromText(text: string): number | null {
     let normalized = priceText;
 
     // Remove thousand separators
-    const regexThousand = new RegExp(`\\${thousandSeparator}(?=\\d{3}(\\${thousandSeparator}|${decimalSeparator}|$))`, "g");
+    const regexThousand = new RegExp(
+      `\\${thousandSeparator}(?=\\d{3}(\\${thousandSeparator}|${decimalSeparator}|$))`,
+      "g",
+    );
     normalized = normalized.replace(regexThousand, "");
 
     // Replace decimal separator with "."

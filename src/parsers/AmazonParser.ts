@@ -64,7 +64,6 @@ export class AmazonParser implements IPriceParser {
     return extractPriceFromText(priceText);
   }
 
-
   clearProcessedElements(): void {
     this.processedElements = new WeakSet();
   }
