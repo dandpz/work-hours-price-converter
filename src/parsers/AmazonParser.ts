@@ -1,3 +1,4 @@
+import { extractPriceFromText } from "../utils";
 import type { IPriceParser } from "./IPriceParser";
 
 export class AmazonParser implements IPriceParser {
@@ -24,6 +25,9 @@ export class AmazonParser implements IPriceParser {
       // Prime day and other special pricing - target only the main visible price elements
       '.a-price.a-text-price .a-offscreen:not([aria-hidden="true"]):not(.a-price-whole)',
       '.a-price.a-text-price .a-price-whole:not([aria-hidden="true"]):not(.a-offscreen)',
+
+      // Basket and cart prices - target only the main visible price elements
+      '.sc-price:not([aria-hidden="true"]):not(.a-offscreen):not(.a-price-whole)',
     ];
 
     const elements: HTMLElement[] = [];
@@ -53,38 +57,13 @@ export class AmazonParser implements IPriceParser {
   }
 
   extractPrice(element: HTMLElement): number | null {
-    // Extract the price text from the element
-    let priceText = element.textContent?.trim();
-    if (!priceText) return null;
-
-    // Handle different number formats
-    if (priceText.includes(".") && priceText.includes(",")) {
-      // Both . and , present - need to determine format
-      const lastCommaIndex = priceText.lastIndexOf(",");
-      const lastDotIndex = priceText.lastIndexOf(".");
-
-      if (lastCommaIndex > lastDotIndex) {
-        // European format: 1.299,99 -> 1299.99
-        priceText = priceText.replace(/\./g, "").replace(",", ".");
-      } else {
-        // US format: 1,299.99 -> 1299.99
-        priceText = priceText.replace(/,/g, "");
-      }
-    } else if (priceText.includes(",")) {
-      // Only comma present
-      const parts = priceText.split(",");
-      if (parts.length === 2 && parts[1] && parts[1].length <= 2) {
-        // Likely European decimal: 999,99 -> 999.99
-        priceText = priceText.replace(",", ".");
-      } else {
-        // Likely US thousand separator: 1,299 -> 1299
-        priceText = priceText.replace(/,/g, "");
-      }
+    const priceText = element.textContent?.trim();
+    if (!priceText) {
+      return null;
     }
-
-    const price = parseFloat(priceText);
-    return Number.isNaN(price) ? null : price;
+    return extractPriceFromText(priceText);
   }
+
 
   clearProcessedElements(): void {
     this.processedElements = new WeakSet();
