@@ -8,7 +8,7 @@ export interface HourlyWage {
 }
 
 export function getCurrencySymbol(currencyCode: CurrencyCode): string {
-  return CURRENCIES[currencyCode].symbol || "€";
+  return CURRENCIES[currencyCode]?.symbol || "€";
 }
 
 export function calculateHourlyWage(settings: UserSettings): HourlyWage | null {
