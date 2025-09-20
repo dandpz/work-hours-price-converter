@@ -25,6 +25,7 @@
     "commitlint": "commitlint --edit",
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "postinstall": "lefthook install"
   }
 }
