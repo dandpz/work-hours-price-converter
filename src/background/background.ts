@@ -12,6 +12,21 @@ chrome.runtime.onInstalled.addListener(() => {
   log("info", "Work Hours Price Converter installed!");
 });
 
+// Listen for URL changes on Amazon pages, because Amazon uses the History API (pushState) for pagination.
+chrome.webNavigation.onHistoryStateUpdated.addListener(
+  (details) => {
+    chrome.tabs
+      .sendMessage(details.tabId, {
+        message: "CHANGED_URL",
+        url: details.url,
+      })
+      .catch(() => {
+        // No content script in this tab — safe to ignore
+      });
+  },
+  { url: [{ hostContains: "amazon." }] },
+);
+
 chrome.runtime.onMessage.addListener(
   (
     message: Message,
