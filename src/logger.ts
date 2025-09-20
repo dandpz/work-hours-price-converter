@@ -1,8 +1,8 @@
 type LogLevel = "info" | "warn" | "error" | "debug";
 
-const disabled = process.env.NODE_ENV === "production"; // false in production
+const disabled = true;
 
 export function log(level: LogLevel, ...args: unknown[]) {
   if (disabled && level !== "error") return;
-  console[level]("WHPC - ", ...args);
+  console[level](`WHPC - ${new Date().toISOString()}`, ...args);
 }

@@ -1,5 +1,5 @@
 import { log } from "../logger";
-import { DEFAULT_TARGET_WEBSITES, DEFAULT_USER_SETTINGS } from "../settings";
+import { DEFAULT_USER_SETTINGS } from "../settings";
 import type { UserSettings } from "../types";
 import { CURRENCIES, type CurrencyCode } from "../types";
 import { calculateHourlyWage } from "../utils";
@@ -26,52 +26,6 @@ function showStatus(message: string, type: "success" | "error" | "info") {
   }
 }
 
-function updateAllTabs() {
-  const targetPatterns = DEFAULT_TARGET_WEBSITES;
-
-  // Query tabs for each target pattern
-  Promise.all(
-    targetPatterns.map((pattern) => chrome.tabs.query({ url: pattern })),
-  )
-    .then((results) => {
-      // Flatten and deduplicate tabs
-      const allTabs = results.flat();
-      const uniqueTabs = allTabs.filter(
-        (tab, index, self) => index === self.findIndex((t) => t.id === tab.id),
-      );
-
-      uniqueTabs.forEach((tab) => {
-        if (tab.id) {
-          const message = {
-            type: "UPDATE_SETTINGS",
-            monthlySalary: settings.monthlySalary,
-            hourlyWage: settings.hourlyWage,
-            dailyHours: settings.dailyHours,
-            workingDaysPerWeek: settings.workingDaysPerWeek,
-            currency: settings.currency,
-            inputType: settings.inputType,
-            enabled: settings.enabled,
-          };
-
-          chrome.tabs.sendMessage(tab.id, message, (_response) => {
-            if (chrome.runtime.lastError) {
-              log(
-                "error",
-                `Error sending message to tab ${tab.id}:`,
-                chrome.runtime.lastError,
-              );
-            } else {
-              log("info", `Successfully sent message to tab ${tab.id}`);
-            }
-          });
-        }
-      });
-    })
-    .catch((error) => {
-      log("error", "Error updating tabs:", error);
-    });
-}
-
 function toggleExtension() {
   settings.enabled = !settings.enabled;
   const checkbox = document.getElementById(
@@ -83,14 +37,11 @@ function toggleExtension() {
     settings.enabled ? "Extension enabled!" : "Extension disabled!",
     "success",
   );
-  updateAllTabs();
 }
 
 function toggleInputMode() {
   settings.inputType = settings.inputType === "hourly" ? "monthly" : "hourly";
-  chrome.storage.local.set({ userSettings: settings }, () => {
-    updateAllTabs();
-  });
+  chrome.storage.local.set({ userSettings: settings });
   renderInputs();
 }
 
@@ -262,7 +213,6 @@ function autoSave() {
   (window as any).saveTimeout = setTimeout(() => {
     chrome.storage.local.set({ userSettings: settings }, () => {
       showStatus("Settings saved!", "success");
-      updateAllTabs();
     });
   }, 500);
 }
