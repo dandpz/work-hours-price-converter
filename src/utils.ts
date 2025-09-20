@@ -8,7 +8,7 @@ export interface HourlyWage {
 }
 
 export function getCurrencySymbol(currencyCode: CurrencyCode): string {
-  return CURRENCIES[currencyCode].symbol || "€";
+  return CURRENCIES[currencyCode]?.symbol || "€";
 }
 
 export function calculateHourlyWage(settings: UserSettings): HourlyWage | null {
@@ -33,4 +33,29 @@ export function calculateHourlyWage(settings: UserSettings): HourlyWage | null {
       formatted: `${getCurrencySymbol(settings.currency)}${hourlyWage.toFixed(2)}/hour`,
     };
   }
+}
+
+export function extractPriceFromText(text: string): number | null {
+  const priceText = text.replace(/\s+/g, "").replace(/[^\d.,-]/g, "");
+
+  // Match last separator as decimal only if followed by 1 or 2 digits
+  const match = priceText.match(/([.,])(\d{1,2})$/);
+  let normalized = priceText;
+
+  if (match) {
+    const decimalChar = match[1];
+    const decimalIndex = priceText.lastIndexOf(decimalChar);
+
+    // Remove all other dots/commas (thousand separators)
+    normalized =
+      normalized.slice(0, decimalIndex).replace(/[.,]/g, "") +
+      "." +
+      normalized.slice(decimalIndex + 1);
+  } else {
+    // No valid decimal: remove all separators
+    normalized = normalized.replace(/[.,]/g, "");
+  }
+
+  const parsed = parseFloat(normalized);
+  return Number.isNaN(parsed) ? null : parsed;
 }
