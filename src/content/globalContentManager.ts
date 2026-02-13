@@ -33,8 +33,8 @@ export class GlobalContentManager implements ContentManager {
       this.hostSpecificContentManager = new AmazonContentManager();
 
       if (!document.body) {
-        requestAnimationFrame(
-          this.hostSpecificContentManager.registerListeners,
+        requestAnimationFrame(() =>
+          this.hostSpecificContentManager?.registerListeners(),
         );
       } else {
         this.hostSpecificContentManager.registerListeners();

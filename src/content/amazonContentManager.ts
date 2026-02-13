@@ -15,9 +15,11 @@ export class AmazonContentManager implements ContentManager {
 
           // Check if this node or any of its children match the carousel
           // heading
+          const className = "p13n-sc-uncoverable-faceout";
+
           if (
-            node.matches(".p13n-sc-uncoverable-faceout") ||
-            node.querySelector(".p13n-sc-uncoverable-faceout")
+            node.matches(`.${className}`) ||
+            node.querySelector(`.${className}`)
           ) {
             this.priceConverter?.refresh();
           }
@@ -25,7 +27,11 @@ export class AmazonContentManager implements ContentManager {
       }
     });
 
-    observer.observe(document.body, { childList: true, subtree: true });
-    log("info", "Amazon MutationObserver started");
+    const elementToObserve = document.getElementById("a-page");
+    if (elementToObserve) {
+      // We want to observe only a sub-tree of the page not to be too
+      // expensive on the processor
+      observer.observe(elementToObserve, { childList: true, subtree: true });
+    }
   }
 }
