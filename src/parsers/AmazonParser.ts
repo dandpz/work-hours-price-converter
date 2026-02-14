@@ -1,4 +1,4 @@
-import { extractPriceFromText } from "../utils";
+import { extractPriceFromText, isVisibleElement } from "../utils";
 import type { IPriceParser } from "./IPriceParser";
 
 export class AmazonParser implements IPriceParser {
@@ -39,7 +39,7 @@ export class AmazonParser implements IPriceParser {
         if (
           el instanceof HTMLElement &&
           !this.isProcessedElement(el) &&
-          this.isVisibleElement(el)
+          isVisibleElement(el)
         ) {
           // Check if we've already processed a price element from this parent
           const parent = this.findBestParentElement(el);
@@ -106,18 +106,5 @@ export class AmazonParser implements IPriceParser {
     const hasGoodClass = goodClasses.some((cls) => className.includes(cls));
 
     return hasGoodClass || element.children.length <= 3;
-  }
-
-  private isVisibleElement(element: HTMLElement): boolean {
-    // Check if element is visible and not hidden
-    const style = window.getComputedStyle(element);
-    return (
-      style.display !== "none" &&
-      style.visibility !== "hidden" &&
-      style.opacity !== "0" &&
-      !element.hasAttribute("aria-hidden") &&
-      element.offsetWidth > 0 &&
-      element.offsetHeight > 0
-    );
   }
 }

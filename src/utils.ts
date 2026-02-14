@@ -59,3 +59,16 @@ export function extractPriceFromText(text: string): number | null {
   const parsed = parseFloat(normalized);
   return Number.isNaN(parsed) ? null : parsed;
 }
+
+export function isVisibleElement(element: HTMLElement): boolean {
+  // Check if element is visible and not hidden
+  const style = window.getComputedStyle(element);
+  return (
+    style.display !== "none" &&
+    style.visibility !== "hidden" &&
+    style.opacity !== "0" &&
+    !element.hasAttribute("aria-hidden") &&
+    element.offsetWidth > 0 &&
+    element.offsetHeight > 0
+  );
+}
