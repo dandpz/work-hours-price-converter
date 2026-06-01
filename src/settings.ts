@@ -4,7 +4,7 @@ import { CURRENCIES } from "./types";
 export const DEFAULT_WORKING_HOURS = {
   DAILY_HOURS: 8,
   DAYS_PER_WEEK: 5,
-  HOURS_PER_MONTH: 160, // 8 hours/day × 5 days/week × 4 weeks
+  HOURS_PER_MONTH: 173, // (8 hours/day × 5 days/week × 52 weeks) / 12 months
 } as const;
 
 // Default salary and wage values
@@ -35,9 +35,6 @@ export const DEFAULT_TARGET_WEBSITES = [
   "*://*.amazon.sa/*",
   "*://*.amazon.eg/*",
   "*://*.amazon.in/*",
-  "*://*.ebay.com/*",
-  "*://*.ebay.co.uk/*",
-  "*://*.ebay.it/*",
 ] as const;
 
 // Default user settings object
