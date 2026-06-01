@@ -35,9 +35,6 @@ export const DEFAULT_TARGET_WEBSITES = [
   "*://*.amazon.sa/*",
   "*://*.amazon.eg/*",
   "*://*.amazon.in/*",
-  "*://*.ebay.com/*",
-  "*://*.ebay.co.uk/*",
-  "*://*.ebay.it/*",
 ] as const;
 
 // Default user settings object
