@@ -13,8 +13,8 @@ describe("calculateHourlyWage", () => {
         };
         const result = calculateHourlyWage(settings);
         expect(result).not.toBeNull();
-        expect(result?.amount).toBeCloseTo(18.75); // use the default values
-        expect(result?.formatted).toBe("€18.75/hour");
+        expect(result?.amount).toBeCloseTo(17.31); // 3000 / ((8*5*52)/12)
+        expect(result?.formatted).toBe("€17.31/hour");
     });
 
     test("calculates hourly wage from monthly salary without monthly salary value", () => {
@@ -27,9 +27,9 @@ describe("calculateHourlyWage", () => {
         };
         const result = calculateHourlyWage(settings);
         expect(result).not.toBeNull();
-        // Default monthlySalary = 3000
-        expect(result?.amount).toBeCloseTo(5);
-        expect(result?.formatted).toBe("€5.00/hour");
+        // Default monthlySalary = 800; 800 / ((8*5*52)/12) ≈ 4.62
+        expect(result?.amount).toBeCloseTo(4.62);
+        expect(result?.formatted).toBe("€4.62/hour");
     });
 
     test("calculates hourly wage from hourly rate", () => {
@@ -67,8 +67,8 @@ describe("calculateHourlyWage", () => {
         };
         const result = calculateHourlyWage(settings);
         expect(result).not.toBeNull();
-        // Default dailyHours = 8, workingDaysPerWeek = 5
-        expect(result?.amount).toBeCloseTo(25);
-        expect(result?.formatted).toBe("£25.00/hour");
+        // Default dailyHours = 8, workingDaysPerWeek = 5; 4000 / ((8*5*52)/12) ≈ 23.08
+        expect(result?.amount).toBeCloseTo(23.08);
+        expect(result?.formatted).toBe("£23.08/hour");
     });
 });

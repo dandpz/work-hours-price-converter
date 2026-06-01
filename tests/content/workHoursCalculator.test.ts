@@ -74,11 +74,11 @@ describe("calculateWorkHours", () => {
 
   describe("with monthly salary", () => {
     test("calculates hours from derived hourly wage", () => {
-      // 3200 / (8*5*4) = 20/h → 100 / 20 = 5h
+      // 3200 / ((8*5*52)/12) = 3200 / 173.33 ≈ 18.46/h → 100 / 18.46 ≈ 5.42h
       const result = calculateWorkHours(100, monthlySettings);
       expect(result).not.toBeNull();
-      expect(result?.hours).toBeCloseTo(5, 1);
-      expect(result?.formatted).toBe("5.0h");
+      expect(result?.hours).toBeCloseTo(5.42, 1);
+      expect(result?.formatted).toBe("5.4h");
     });
 
     test("returns correct hours value", () => {

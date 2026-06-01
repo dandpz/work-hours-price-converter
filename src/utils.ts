@@ -18,7 +18,7 @@ export function calculateHourlyWage(settings: UserSettings): HourlyWage | null {
     const dailyHours = settings.dailyHours || DEFAULT_USER_SETTINGS.dailyHours;
     const workingDaysPerWeek =
       settings.workingDaysPerWeek || DEFAULT_USER_SETTINGS.workingDaysPerWeek;
-    const totalMonthlyHours = dailyHours * workingDaysPerWeek * 4;
+    const totalMonthlyHours = (dailyHours * workingDaysPerWeek * 52) / 12;
     const hourlyWage = monthlySalary / totalMonthlyHours;
     return {
       currency: settings.currency,
